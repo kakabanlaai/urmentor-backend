@@ -18,7 +18,7 @@ export class RefreshTokenIdsStorage
     this.redisClient = new Redis(process.env.REDIS_URL);
   }
 
-  onApplicationShutdown(signal?: string) {
+  onApplicationShutdown() {
     return this.redisClient.quit();
   }
 

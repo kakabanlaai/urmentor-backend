@@ -20,6 +20,7 @@ import {
   RefreshTokenIdsStorage,
 } from './refresh-token-ids.storage';
 import * as crypto from 'crypto';
+import PostgresErrorCode from 'src/database/postgresErrorCodes.enum';
 
 @Injectable()
 export class AuthenticationService {
@@ -34,14 +35,17 @@ export class AuthenticationService {
 
   async signUp(signUpDto: SignUpDto) {
     try {
+      const hashedPassword = await this.hashingService.hash(signUpDto.password);
+
       const user = new User();
-      user.email = signUpDto.email;
-      user.password = await this.hashingService.hash(signUpDto.password);
+      Object.assign(user, { ...signUpDto, password: hashedPassword });
 
       await this.userRepository.save(user);
+
+      const tokenObj = await this.generateTokens(user);
+      return Object.assign(user, tokenObj);
     } catch (err) {
-      const pgUniqueViolationErrorCode = '23505';
-      if (err.code === pgUniqueViolationErrorCode) {
+      if (err.code === PostgresErrorCode.UniqueViolation) {
         throw new ConflictException();
       }
 
@@ -67,7 +71,12 @@ export class AuthenticationService {
       throw new UnauthorizedException('Password does not match');
     }
 
-    return this.generateTokens(user);
+    const tokenObj = await this.generateTokens(user);
+    return Object.assign(user, tokenObj);
+  }
+
+  async signOut(userId: number) {
+    this.refreshTokenIdsStorage.invalidate(userId);
   }
 
   async refreshTokens(refreshTokenDto: RefreshTokenDto) {
@@ -107,6 +116,7 @@ export class AuthenticationService {
         this.jwtConfiguration.accessTokenTtl,
         {
           email: user.email,
+          role: user.role,
         },
       ),
       this.signToken(user.id, this.jwtConfiguration.accessTokenTtl, {

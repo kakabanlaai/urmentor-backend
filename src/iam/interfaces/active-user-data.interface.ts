@@ -1,3 +1,5 @@
+import { Role } from 'src/users/enums/role.enum';
+
 export interface ActiveUserData {
   /**
    * The "subject" of token. The value of this property is user ID
@@ -9,4 +11,6 @@ export interface ActiveUserData {
    * The subject's(user) email
    */
   email: string;
+
+  role: Role;
 }
