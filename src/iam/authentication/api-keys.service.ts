@@ -1,6 +1,6 @@
 import { randomUUID } from 'crypto';
 import { Injectable } from '@nestjs/common';
-import { HashingService } from '../hashing/hashing.service';
+import { HashingService } from '../../hashing/hashing.service';
 
 export interface GeneratedApiKeyPayload {
   apiKey: string;

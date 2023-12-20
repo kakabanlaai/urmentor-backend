@@ -24,8 +24,8 @@ import { PaginationQueryDto } from 'src/common/dto/pagination-query.dto';
 import { User } from './entities/user.entity';
 import { Pagination } from 'nestjs-typeorm-paginate';
 
-@Auth(AuthType.Bearer)
 @Roles(Role.Admin)
+@Auth(AuthType.Bearer)
 @ApiTags('users')
 @Controller('users')
 @UseInterceptors(ClassSerializerInterceptor)

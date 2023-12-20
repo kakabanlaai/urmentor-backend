@@ -50,6 +50,7 @@ export class AuthenticationController {
     return this.authService.refreshTokens(refreshTokenDto);
   }
 
+  @HttpCode(HttpStatus.NO_CONTENT)
   @Auth(AuthType.Bearer)
   @Post('sign-out')
   signOut(@ActiveUser('sub') userId: number): Promise<void> {

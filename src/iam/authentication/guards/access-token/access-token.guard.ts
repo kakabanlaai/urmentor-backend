@@ -5,7 +5,7 @@ import {
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
+import { JsonWebTokenError, JwtService } from '@nestjs/jwt';
 import jwtConfig from '../../../config/jwt.config';
 import { ConfigType } from '@nestjs/config';
 import { Request } from 'express';
@@ -34,6 +34,9 @@ export class AccessTokenGuard implements CanActivate {
       );
       request[REQUEST_USER_KEY] = payload;
     } catch (err) {
+      if (err instanceof JsonWebTokenError) {
+        throw new UnauthorizedException(err.message);
+      }
       throw new UnauthorizedException();
     }
     return true;

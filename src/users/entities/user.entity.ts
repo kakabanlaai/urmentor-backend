@@ -19,17 +19,29 @@ export class User {
   email: string;
 
   @Column({ nullable: true })
-  public phoneNumber?: string;
+  phoneNumber?: string;
 
   @Column()
-  public name: string;
+  name: string;
 
   @Column()
   @Exclude()
   password: string;
 
-  @Column({ enum: Role, default: Role.Mentee })
+  @Column({ type: 'enum', enum: Role, default: Role.Mentee })
   role: Role;
+
+  @Column({ nullable: true })
+  avatar: string;
+
+  @Column({ default: 0 })
+  coin: number;
+
+  @Column({ default: false })
+  isActive: boolean;
+
+  @Column({ default: true })
+  hasSetPass: boolean;
 
   @Column({ nullable: true })
   @Exclude()

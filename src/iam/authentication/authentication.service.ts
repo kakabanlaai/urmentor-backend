@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   ConflictException,
   Inject,
   Injectable,
@@ -7,7 +8,6 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '../../users/entities/user.entity';
 import { Repository } from 'typeorm';
-import { HashingService } from '../hashing/hashing.service';
 import { SignUpDto } from './dto/sign-up.dto';
 import { SignInDto } from './dto/sign-in.dto';
 import { JwtService } from '@nestjs/jwt';
@@ -21,6 +21,7 @@ import {
 } from './refresh-token-ids.storage';
 import * as crypto from 'crypto';
 import PostgresErrorCode from 'src/database/postgresErrorCodes.enum';
+import { HashingService } from '../../hashing/hashing.service';
 
 @Injectable()
 export class AuthenticationService {
@@ -62,13 +63,13 @@ export class AuthenticationService {
       throw new UnauthorizedException('User does not exists');
     }
 
-    const isEqual = this.hashingService.compare(
+    const isEqual = await this.hashingService.compare(
       signInDto.password,
       user.password,
     );
 
     if (!isEqual) {
-      throw new UnauthorizedException('Password does not match');
+      throw new BadRequestException('Wrong credentials provided');
     }
 
     const tokenObj = await this.generateTokens(user);

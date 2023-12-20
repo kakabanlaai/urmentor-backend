@@ -4,11 +4,11 @@ import { Injectable } from '@nestjs/common';
 export class InvalidatedRefreshTokenError extends Error {}
 
 @Injectable()
-export class RefreshTokenIdsStorage {
+export class ConfirmMailIdsStorage {
   constructor(@InjectRedis() private readonly redis: Redis) {}
 
-  async insert(userId: number, tokenId: string): Promise<void> {
-    await this.redis.set(this.getKey(userId), tokenId);
+  async insert(userId: number, tokenId: string, ttl: number): Promise<void> {
+    await this.redis.set(this.getKey(userId), tokenId, 'EX', ttl);
   }
 
   async invalidate(userId: number): Promise<void> {
@@ -24,6 +24,6 @@ export class RefreshTokenIdsStorage {
   }
 
   private getKey(userId: number): string {
-    return `user-${userId}`;
+    return `confirm-mail-${userId}`;
   }
 }

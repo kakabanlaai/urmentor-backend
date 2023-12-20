@@ -1,6 +1,4 @@
 import { Module } from '@nestjs/common';
-import { HashingService } from './hashing/hashing.service';
-import { BcryptService } from './hashing/bcrypt.service';
 import { AuthenticationController } from './authentication/authentication.controller';
 import { AuthenticationService } from './authentication/authentication.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -18,15 +16,16 @@ import { ApiKeyGuard } from './authentication/guards/api-key/api-key.guard';
 import { ApiKey } from 'src/users/api-keys/entities/api-key.entity';
 import { GoogleAuthenticationService } from './authentication/social/google-authentication.service';
 import { GoogleAuthenticationController } from './authentication/social/google-authentication.controller';
+import { HashingModule } from '../hashing/hashing.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([User, ApiKey]),
     JwtModule.registerAsync(jwtConfig.asProvider()),
     ConfigModule.forFeature(jwtConfig),
+    HashingModule,
   ],
   providers: [
-    { provide: HashingService, useClass: BcryptService },
     { provide: APP_GUARD, useClass: AuthenticationGuard },
     { provide: APP_GUARD, useClass: RoleGuard },
     RefreshTokenIdsStorage,

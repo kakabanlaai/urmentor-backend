@@ -34,13 +34,28 @@ export class GoogleAuthenticationService implements OnModuleInit {
       const loginTicket = await this.oauthClient.verifyIdToken({
         idToken: token,
       });
-      const { email, sub: googleId } = loginTicket.getPayload();
+      const {
+        email,
+        sub: googleId,
+        name,
+        picture: avatar,
+      } = loginTicket.getPayload();
       const user = await this.userRepository.findOneBy({ googleId });
       if (user) {
-        return this.authService.generateTokens(user);
+        const tokenObj = await this.authService.generateTokens(user);
+
+        return Object.assign(user, tokenObj);
       } else {
-        const newUser = await this.userRepository.save({ email, googleId });
-        return this.authService.generateTokens(newUser);
+        const newUser = await this.userRepository.save({
+          email,
+          googleId,
+          name,
+          avatar,
+          hasSetPass: false,
+          isActive: true,
+        });
+        const tokenObj = await this.authService.generateTokens(user);
+        return Object.assign(newUser, tokenObj);
       }
     } catch (error) {
       if (error.code === PostgresErrorCode.UniqueViolation) {
