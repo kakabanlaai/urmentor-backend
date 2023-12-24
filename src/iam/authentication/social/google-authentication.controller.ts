@@ -5,8 +5,8 @@ import { Auth } from '../decorators/auth.decorator';
 import { AuthType } from '../enums/auth-type.enum';
 import { ApiExcludeController } from '@nestjs/swagger';
 
-@ApiExcludeController()
 @Auth(AuthType.None)
+@ApiExcludeController()
 @Controller('auth/google')
 export class GoogleAuthenticationController {
   constructor(

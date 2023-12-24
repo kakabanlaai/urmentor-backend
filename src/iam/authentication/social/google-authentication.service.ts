@@ -11,6 +11,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/users/entities/user.entity';
 import { Repository } from 'typeorm';
 import PostgresErrorCode from 'src/database/postgresErrorCodes.enum';
+import { google } from 'googleapis';
 
 @Injectable()
 export class GoogleAuthenticationService implements OnModuleInit {
@@ -31,21 +32,19 @@ export class GoogleAuthenticationService implements OnModuleInit {
 
   async authenticate(token: string) {
     try {
-      const loginTicket = await this.oauthClient.verifyIdToken({
-        idToken: token,
-      });
-      const {
-        email,
-        sub: googleId,
-        name,
-        picture: avatar,
-      } = loginTicket.getPayload();
-      const user = await this.userRepository.findOneBy({ googleId });
+      const { sub: googleId, email } =
+        await this.oauthClient.getTokenInfo(token);
+
+      const user = await this.userRepository.findOneBy({ email });
       if (user) {
+        user.googleId = googleId;
+        await this.userRepository.save(user);
         const tokenObj = await this.authService.generateTokens(user);
 
         return Object.assign(user, tokenObj);
       } else {
+        const { email, name, picture: avatar } = await this.getUserData(token);
+
         const newUser = await this.userRepository.save({
           email,
           googleId,
@@ -61,8 +60,23 @@ export class GoogleAuthenticationService implements OnModuleInit {
       if (error.code === PostgresErrorCode.UniqueViolation) {
         throw new ConflictException('Email already exists');
       }
+      console.log(error);
 
       throw new UnauthorizedException();
     }
+  }
+
+  async getUserData(token: string) {
+    const userInfoClient = google.oauth2('v2').userinfo;
+
+    this.oauthClient.setCredentials({
+      access_token: token,
+    });
+
+    const userInfoResponse = await userInfoClient.get({
+      auth: this.oauthClient,
+    });
+
+    return userInfoResponse.data;
   }
 }
