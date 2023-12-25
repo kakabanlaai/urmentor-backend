@@ -3,7 +3,10 @@ import { ApiTags } from '@nestjs/swagger';
 import { ForgotPasswordDto } from './dtos/forgot-password.dto';
 import { ForgotPasswordService } from './forgot-password.service';
 import { ResetPasswordDto } from './dtos/reset-password.dot';
+import { Auth } from 'src/iam/authentication/decorators/auth.decorator';
+import { AuthType } from 'src/iam/authentication/enums/auth-type.enum';
 
+@Auth(AuthType.None)
 @ApiTags('forgot-password')
 @Controller('users')
 export class ForgotPasswordController {

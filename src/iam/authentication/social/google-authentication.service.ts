@@ -53,7 +53,7 @@ export class GoogleAuthenticationService implements OnModuleInit {
           hasSetPass: false,
           isActive: true,
         });
-        const tokenObj = await this.authService.generateTokens(user);
+        const tokenObj = await this.authService.generateTokens(newUser);
         return Object.assign(newUser, tokenObj);
       }
     } catch (error) {

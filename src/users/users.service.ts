@@ -7,8 +7,8 @@ import { Repository } from 'typeorm';
 import UserNotFoundException from './exceptions/userNotFound.exception';
 import {
   IPaginationOptions,
-  Pagination,
   paginate,
+  Pagination,
 } from 'nestjs-typeorm-paginate';
 
 @Injectable()
@@ -17,6 +17,7 @@ export class UsersService {
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
   ) {}
+
   create(createUserDto: CreateUserDto) {
     return 'This action adds a new user';
   }
@@ -29,8 +30,13 @@ export class UsersService {
     return `This action returns a #${id} user`;
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  async update(id: number, updateUserDto: UpdateUserDto) {
+    const toUpdate = await this.userRepository.findOne({ where: { id } });
+    if (!toUpdate) {
+      throw new UserNotFoundException(id);
+    }
+    const updated = Object.assign(toUpdate, updateUserDto);
+    return await this.userRepository.save(updated);
   }
 
   async remove(id: number): Promise<void> {
@@ -52,6 +58,7 @@ export class UsersService {
       where: {
         id: userId,
       },
+      relations: ['mentorProfile'],
     });
     if (!user) {
       throw new BadRequestException('User not found');

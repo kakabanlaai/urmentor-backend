@@ -1,8 +1,8 @@
-import { REQUEST_USER_KEY } from './../../../iam.constants';
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { ROLES_KEY } from '../../decorators/role.decorator';
 import { ActiveUserData } from 'src/iam/interfaces/active-user-data.interface';
+import { REQUEST_USER_KEY } from '../../../iam.constants';
 
 @Injectable()
 export class RoleGuard implements CanActivate {

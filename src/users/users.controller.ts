@@ -1,22 +1,20 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Patch,
-  Param,
-  Delete,
-  UseInterceptors,
   ClassSerializerInterceptor,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
   Query,
+  UseInterceptors,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { Role } from './enums/role.enum';
 import { Roles } from 'src/iam/authentication/decorators/role.decorator';
-import { Auth } from 'src/iam/authentication/decorators/auth.decorator';
-import { AuthType } from 'src/iam/authentication/enums/auth-type.enum';
 import { ApiTags } from '@nestjs/swagger';
 import { ActiveUser } from 'src/iam/decorators/active-user.decorator';
 import { ActiveUserData } from 'src/iam/interfaces/active-user-data.interface';
@@ -25,7 +23,6 @@ import { User } from './entities/user.entity';
 import { Pagination } from 'nestjs-typeorm-paginate';
 
 @Roles(Role.Admin)
-@Auth(AuthType.Bearer)
 @ApiTags('users')
 @Controller('users')
 @UseInterceptors(ClassSerializerInterceptor)
@@ -45,26 +42,22 @@ export class UsersController {
     return this.usersService.findAll({ limit, page });
   }
 
-  @Roles(Role.Mentee)
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.usersService.findOne(+id);
   }
 
-  @Roles(Role.Mentee)
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
     return this.usersService.update(+id, updateUserDto);
   }
 
-  @Roles(Role.Mentee)
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.usersService.remove(+id);
   }
 }
 
-@Auth(AuthType.Bearer)
 @Controller('me')
 @UseInterceptors(ClassSerializerInterceptor)
 export class MeController {
@@ -73,5 +66,13 @@ export class MeController {
   @Get()
   me(@ActiveUser() user: ActiveUserData) {
     return this.usersService.getMe(user.sub);
+  }
+
+  @Post()
+  updateMe(
+    @ActiveUser() user: ActiveUserData,
+    @Body() updateUserDto: UpdateUserDto,
+  ) {
+    return this.usersService.update(user.sub, updateUserDto);
   }
 }

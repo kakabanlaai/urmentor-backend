@@ -2,13 +2,16 @@ import {
   Column,
   DeleteDateColumn,
   Entity,
+  JoinColumn,
   JoinTable,
   OneToMany,
+  OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Role } from '../enums/role.enum';
 import { ApiKey } from '../api-keys/entities/api-key.entity';
 import { Exclude } from 'class-transformer';
+import { MentorProfile } from '../../mentor-profiles/entities/mentor-profile.entity';
 
 @Entity()
 export class User {
@@ -40,12 +43,19 @@ export class User {
   @Column({ default: false })
   isActive: boolean;
 
+  @Column({ default: false })
+  isBlocked: boolean;
+
   @Column({ default: true })
   hasSetPass: boolean;
 
   @Column({ nullable: true })
   @Exclude()
   googleId: string;
+
+  @JoinColumn()
+  @OneToOne(() => MentorProfile, (mentorProfile) => mentorProfile.user)
+  mentorProfile: MentorProfile;
 
   @JoinTable()
   @OneToMany(() => ApiKey, (apiKey) => apiKey.user)

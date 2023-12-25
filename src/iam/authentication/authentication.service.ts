@@ -86,8 +86,6 @@ export class AuthenticationService {
         Pick<ActiveUserData, 'sub'> & { refreshTokenId: string }
       >(refreshTokenDto.refreshToken, {
         secret: this.jwtConfiguration.secret,
-        audience: this.jwtConfiguration.audience,
-        issuer: this.jwtConfiguration.issuer,
       });
 
       const user = await this.userRepository.findOneByOrFail({ id: sub });
@@ -105,7 +103,7 @@ export class AuthenticationService {
       if (err instanceof InvalidatedRefreshTokenError) {
         throw new UnauthorizedException('Access denied');
       }
-      throw new UnauthorizedException();
+      throw new UnauthorizedException(err.message);
     }
   }
 
@@ -120,7 +118,7 @@ export class AuthenticationService {
           role: user.role,
         },
       ),
-      this.signToken(user.id, this.jwtConfiguration.accessTokenTtl, {
+      this.signToken(user.id, this.jwtConfiguration.refreshTokenTtl, {
         refreshTokenId,
       }),
     ]);
@@ -141,8 +139,6 @@ export class AuthenticationService {
       },
       {
         secret: this.jwtConfiguration.secret,
-        issuer: this.jwtConfiguration.issuer,
-        audience: this.jwtConfiguration.audience,
         expiresIn: expiresIn,
       },
     );
