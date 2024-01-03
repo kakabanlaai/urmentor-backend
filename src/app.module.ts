@@ -7,7 +7,10 @@ import { DatabaseModule } from './database/database.module';
 import { MailerProvider } from './provider/mailer.provider';
 import { RedisProvider } from './provider/redis.provider';
 import userConfig from './config/user.config';
-import { MentorProfilesModule } from './mentor-profiles/mentor-profiles.module';
+import { ExperiencesModule } from './experiences/experiences.module';
+import { AchievementsModule } from './achievements/achievements.module';
+import { EducationsModule } from './educations/educations.module';
+import { MentorApplicationsModule } from './mentor-applications/mentor-applications.module';
 
 @Module({
   imports: [
@@ -40,8 +43,11 @@ import { MentorProfilesModule } from './mentor-profiles/mentor-profiles.module';
     RedisProvider,
     DatabaseModule,
     UsersModule,
-    MentorProfilesModule,
+    ExperiencesModule,
+    AchievementsModule,
     IamModule,
+    EducationsModule,
+    MentorApplicationsModule,
   ],
 })
 export class AppModule {}

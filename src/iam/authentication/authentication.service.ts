@@ -63,6 +63,10 @@ export class AuthenticationService {
       throw new UnauthorizedException('User does not exists');
     }
 
+    if (user.password === null) {
+      throw new BadRequestException('Wrong credentials provided');
+    }
+
     const isEqual = await this.hashingService.compare(
       signInDto.password,
       user.password,

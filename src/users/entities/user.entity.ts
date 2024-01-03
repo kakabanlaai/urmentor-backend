@@ -2,7 +2,6 @@ import {
   Column,
   DeleteDateColumn,
   Entity,
-  JoinColumn,
   JoinTable,
   OneToMany,
   OneToOne,
@@ -11,7 +10,10 @@ import {
 import { Role } from '../enums/role.enum';
 import { ApiKey } from '../api-keys/entities/api-key.entity';
 import { Exclude } from 'class-transformer';
-import { MentorProfile } from '../../mentor-profiles/entities/mentor-profile.entity';
+import { Experience } from '../../experiences/entities/experience.entity';
+import { Achievement } from '../../achievements/entities/achievement.entity';
+import { Education } from '../../educations/entities/education.entity';
+import { MentorApplication } from 'src/mentor-applications/entities/mentor-application.entity';
 
 @Entity()
 export class User {
@@ -53,9 +55,20 @@ export class User {
   @Exclude()
   googleId: string;
 
-  @JoinColumn()
-  @OneToOne(() => MentorProfile, (mentorProfile) => mentorProfile.user)
-  mentorProfile: MentorProfile;
+  @OneToMany(() => Experience, (experience) => experience.user)
+  experiences: Experience[];
+
+  @OneToMany(() => Achievement, (achievement) => achievement.user)
+  achievements: Achievement[];
+
+  @OneToMany(() => Education, (education) => education.user)
+  educations: Education[];
+
+  @OneToOne(
+    () => MentorApplication,
+    (mentorApplication) => mentorApplication.user,
+  )
+  mentorApplication: MentorApplication;
 
   @JoinTable()
   @OneToMany(() => ApiKey, (apiKey) => apiKey.user)

@@ -12,11 +12,10 @@ import { HashingModule } from '../hashing/hashing.module';
 import { ForgotPasswordService } from './forgot-password/forgot-password.service';
 import { ForgotPasswordController } from './forgot-password/forgot-password.controller';
 import { ForgotPassword } from './forgot-password/entities/forgot-password.entity';
-import { MentorProfile } from '../mentor-profiles/entities/mentor-profile.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([User, ApiKey, ForgotPassword, MentorProfile]),
+    TypeOrmModule.forFeature([User, ApiKey, ForgotPassword]),
     HashingModule,
   ],
   controllers: [

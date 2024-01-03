@@ -58,7 +58,12 @@ export class UsersService {
       where: {
         id: userId,
       },
-      relations: ['mentorProfile'],
+      relations: {
+        experiences: true,
+        achievements: true,
+        educations: true,
+        mentorApplication: true,
+      },
     });
     if (!user) {
       throw new BadRequestException('User not found');
