@@ -1,4 +1,10 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  DeleteDateColumn,
+  Entity,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { User } from '../../users/entities/user.entity';
 
 @Entity()
@@ -24,9 +30,12 @@ export class Education {
   @Column({ nullable: true })
   endDate: Date;
 
-  @Column({ default: false })
+  @Column({ default: true })
   isCurrent: boolean;
 
   @ManyToOne(() => User, (user) => user.educations)
   user: User;
+
+  @DeleteDateColumn()
+  deletedAt: Date;
 }

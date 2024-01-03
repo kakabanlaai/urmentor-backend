@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsDate, IsNotEmpty, IsString } from 'class-validator';
 
 export class CreateAchievementDto {
   @IsString()
@@ -8,4 +8,8 @@ export class CreateAchievementDto {
   @IsString()
   @IsNotEmpty()
   description: string;
+
+  @IsDate()
+  @IsNotEmpty()
+  date: Date;
 }

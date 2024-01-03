@@ -29,6 +29,7 @@ export class CreateEducationDto {
 
   @IsOptional()
   @IsString()
+  @IsNotEmpty()
   description?: string;
 
   @IsBoolean()

@@ -11,6 +11,7 @@ import { User } from 'src/users/entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { MentorApplicationStatus } from './enums/status.enum';
 import { Role } from 'src/users/enums/role.enum';
+import { MailsService } from 'src/mails/mails.service';
 
 @Injectable()
 export class MentorApplicationsService {
@@ -20,6 +21,8 @@ export class MentorApplicationsService {
 
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
+
+    private readonly mailsService: MailsService,
   ) {}
 
   async create(
@@ -33,9 +36,9 @@ export class MentorApplicationsService {
       },
     });
 
-    if (user.role !== Role.Mentee) {
-      throw new BadRequestException('Only mentees can apply for a mentor');
-    }
+    // if (user.role !== Role.Mentee) {
+    //   throw new BadRequestException('Only mentees can apply for a mentor');
+    // }
 
     if (
       user.mentorApplication &&
@@ -79,8 +82,45 @@ export class MentorApplicationsService {
     return mentorApplication;
   }
 
-  update(id: number, updateMentorApplicationDto: UpdateMentorApplicationDto) {
-    return `This action updates a #${id} mentorApplication`;
+  async update(
+    id: number,
+    updateMentorApplicationDto: UpdateMentorApplicationDto,
+  ) {
+    const mentorApplication = await this.mentorApplicationRepository.findOne({
+      where: { id: id },
+      relations: {
+        user: true,
+      },
+    });
+
+    if (!mentorApplication) {
+      throw new NotFoundException(`Mentor application with ID ${id} not found`);
+    }
+
+    // Update only the fields provided in the DTO
+    for (const [key, value] of Object.entries(updateMentorApplicationDto)) {
+      if (value !== undefined) {
+        mentorApplication[key] = value;
+      }
+    }
+
+    if (mentorApplication.status === MentorApplicationStatus.Accepted) {
+      mentorApplication.user.role = Role.Mentor;
+      await this.userRepository.save(mentorApplication.user);
+      await this.mailsService.acceptMentorApplication({
+        to: mentorApplication.user.email,
+      });
+    }
+
+    if (mentorApplication.status === MentorApplicationStatus.Rejected) {
+      await this.mailsService.rejectMentorApplication({
+        to: mentorApplication.user.email,
+      });
+    }
+
+    await this.mentorApplicationRepository.save(mentorApplication);
+
+    return mentorApplication;
   }
 
   remove(id: number) {

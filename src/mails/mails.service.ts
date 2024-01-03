@@ -33,4 +33,24 @@ export class MailsService {
       } hour`,
     });
   }
+
+  async rejectMentorApplication(mailData: MailData): Promise<void> {
+    await this.mailerService.sendMail({
+      from: 'urMentor.com',
+      to: mailData.to,
+      subject: 'Rejected mentor application',
+
+      text: `Your mentor application has been rejected.`,
+    });
+  }
+
+  async acceptMentorApplication(mailData: MailData): Promise<void> {
+    await this.mailerService.sendMail({
+      from: 'urMentor.com',
+      to: mailData.to,
+      subject: 'Accepted mentor application',
+
+      text: `Your mentor application has been accepted.`,
+    });
+  }
 }
