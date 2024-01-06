@@ -40,6 +40,7 @@ export class User {
   avatar: string;
 
   @Column({ default: 0 })
+  @Exclude()
   coin: number;
 
   @Column({ default: false })

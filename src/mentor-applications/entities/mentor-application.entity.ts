@@ -1,6 +1,7 @@
 import { Exclude } from 'class-transformer';
 import {
   Column,
+  CreateDateColumn,
   DeleteDateColumn,
   Entity,
   JoinColumn,
@@ -31,6 +32,10 @@ export class MentorApplication {
   @DeleteDateColumn()
   @Exclude()
   deletedAt: Date;
+
+  @CreateDateColumn()
+  @Exclude()
+  createdAt: Date;
 
   @JoinColumn()
   @OneToOne(() => User, (user) => user.mentorApplication)

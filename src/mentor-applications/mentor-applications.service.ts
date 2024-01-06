@@ -36,9 +36,9 @@ export class MentorApplicationsService {
       },
     });
 
-    // if (user.role !== Role.Mentee) {
-    //   throw new BadRequestException('Only mentees can apply for a mentor');
-    // }
+    if (user.role !== Role.Mentee) {
+      throw new BadRequestException('Only mentees can apply for a mentor');
+    }
 
     if (
       user.mentorApplication &&
@@ -116,6 +116,7 @@ export class MentorApplicationsService {
       await this.mailsService.rejectMentorApplication({
         to: mentorApplication.user.email,
       });
+      mentorApplication.user = null;
     }
 
     await this.mentorApplicationRepository.save(mentorApplication);

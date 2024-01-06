@@ -12,6 +12,8 @@ import { HashingModule } from '../hashing/hashing.module';
 import { ForgotPasswordService } from './forgot-password/forgot-password.service';
 import { ForgotPasswordController } from './forgot-password/forgot-password.controller';
 import { ForgotPassword } from './forgot-password/entities/forgot-password.entity';
+import { MentorsController } from './mentors/mentors.controller';
+import { MentorsService } from './mentors/mentors.service';
 
 @Module({
   imports: [
@@ -23,11 +25,13 @@ import { ForgotPassword } from './forgot-password/entities/forgot-password.entit
     ForgotPasswordController,
     UsersController,
     MeController,
+    MentorsController,
   ],
   providers: [
     UsersService,
     ConfirmMailIdsStorage,
     MailsService,
+    MentorsService,
     VerifyMailService,
     ForgotPasswordService,
   ],

@@ -8,5 +8,5 @@ export class CreateMentorApplicationDto {
   @IsNotEmpty()
   @IsString()
   @IsOptional()
-  cv: string;
+  cv?: string;
 }
