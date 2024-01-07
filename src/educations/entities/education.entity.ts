@@ -38,4 +38,7 @@ export class Education {
 
   @DeleteDateColumn()
   deletedAt: Date;
+
+  @Column({ nullable: true })
+  icon: string;
 }

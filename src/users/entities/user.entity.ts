@@ -3,6 +3,7 @@ import {
   DeleteDateColumn,
   Entity,
   JoinTable,
+  ManyToMany,
   OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
@@ -14,6 +15,8 @@ import { Experience } from '../../experiences/entities/experience.entity';
 import { Achievement } from '../../achievements/entities/achievement.entity';
 import { Education } from '../../educations/entities/education.entity';
 import { MentorApplication } from 'src/mentor-applications/entities/mentor-application.entity';
+import { Skill } from 'src/skills/entities/skill.entity';
+import { Program } from 'src/programs/entities/program.entity';
 
 @Entity()
 export class User {
@@ -56,6 +59,9 @@ export class User {
   @Exclude()
   googleId: string;
 
+  @Column({ nullable: true })
+  introduction: string;
+
   @OneToMany(() => Experience, (experience) => experience.user)
   experiences: Experience[];
 
@@ -64,6 +70,13 @@ export class User {
 
   @OneToMany(() => Education, (education) => education.user)
   educations: Education[];
+
+  @ManyToMany(() => Skill, (skills) => skills.users)
+  @JoinTable()
+  skills: Skill[];
+
+  @OneToMany(() => Program, (program) => program.user)
+  programs: Program[];
 
   @OneToOne(
     () => MentorApplication,

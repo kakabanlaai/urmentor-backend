@@ -35,4 +35,9 @@ export class CreateEducationDto {
   @IsBoolean()
   @IsOptional()
   isCurrent: boolean;
+
+  @IsOptional()
+  @IsString()
+  @IsNotEmpty()
+  icon?: string;
 }

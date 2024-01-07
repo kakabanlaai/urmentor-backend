@@ -11,6 +11,9 @@ import { ExperiencesModule } from './experiences/experiences.module';
 import { AchievementsModule } from './achievements/achievements.module';
 import { EducationsModule } from './educations/educations.module';
 import { MentorApplicationsModule } from './mentor-applications/mentor-applications.module';
+import { SkillsModule } from './skills/skills.module';
+import { ProgramsModule } from './programs/programs.module';
+import { TopicsModule } from './topics/topics.module';
 
 @Module({
   imports: [
@@ -48,6 +51,9 @@ import { MentorApplicationsModule } from './mentor-applications/mentor-applicati
     IamModule,
     EducationsModule,
     MentorApplicationsModule,
+    SkillsModule,
+    ProgramsModule,
+    TopicsModule,
   ],
 })
 export class AppModule {}

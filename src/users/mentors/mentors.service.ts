@@ -18,6 +18,8 @@ export class MentorsService {
         achievements: true,
         experiences: true,
         educations: true,
+        skills: true,
+        programs: true,
       },
     });
   }

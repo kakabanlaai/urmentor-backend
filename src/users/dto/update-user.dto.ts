@@ -11,6 +11,9 @@ class NonOptionalUpdateUserDto {
 
   @IsNotEmpty()
   avatar: string;
+
+  @IsNotEmpty()
+  introduction: string;
 }
 
 export class UpdateUserDto extends PartialType(NonOptionalUpdateUserDto) {}
