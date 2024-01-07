@@ -20,6 +20,7 @@ export class MentorsService {
         educations: true,
         skills: true,
         programs: true,
+        ratings: true,
       },
     });
   }

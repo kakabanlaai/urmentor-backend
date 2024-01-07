@@ -17,6 +17,7 @@ import { Education } from '../../educations/entities/education.entity';
 import { MentorApplication } from 'src/mentor-applications/entities/mentor-application.entity';
 import { Skill } from 'src/skills/entities/skill.entity';
 import { Program } from 'src/programs/entities/program.entity';
+import { Rating } from 'src/ratings/entities/rating.entity';
 
 @Entity()
 export class User {
@@ -74,6 +75,12 @@ export class User {
   @ManyToMany(() => Skill, (skills) => skills.users)
   @JoinTable()
   skills: Skill[];
+
+  @OneToMany(() => Rating, (rating) => rating.fromUser)
+  sendedRatings: Rating[];
+
+  @OneToMany(() => Rating, (rating) => rating.toUser)
+  ratings: Rating[];
 
   @OneToMany(() => Program, (program) => program.user)
   programs: Program[];

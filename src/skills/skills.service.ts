@@ -42,7 +42,7 @@ export class SkillsService {
   }
 
   findAll() {
-    return `This action returns all skills`;
+    return this.skillsRepository.find();
   }
 
   findOne(id: number) {

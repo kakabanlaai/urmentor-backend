@@ -14,6 +14,7 @@ import { MentorApplicationsModule } from './mentor-applications/mentor-applicati
 import { SkillsModule } from './skills/skills.module';
 import { ProgramsModule } from './programs/programs.module';
 import { TopicsModule } from './topics/topics.module';
+import { RatingsModule } from './ratings/ratings.module';
 
 @Module({
   imports: [
@@ -54,6 +55,7 @@ import { TopicsModule } from './topics/topics.module';
     SkillsModule,
     ProgramsModule,
     TopicsModule,
+    RatingsModule,
   ],
 })
 export class AppModule {}
