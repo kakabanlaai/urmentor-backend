@@ -1,4 +1,4 @@
-import { IsNotEmpty, Length } from 'class-validator';
+import { IsNotEmpty, IsString, Length } from 'class-validator';
 import { PartialType } from '@nestjs/swagger';
 
 class NonOptionalUpdateUserDto {
@@ -12,7 +12,7 @@ class NonOptionalUpdateUserDto {
   @IsNotEmpty()
   avatar: string;
 
-  @IsNotEmpty()
+  @IsString()
   introduction: string;
 }
 

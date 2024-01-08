@@ -6,7 +6,6 @@ import {
   Get,
   Param,
   Patch,
-  Post,
   Query,
   UseInterceptors,
 } from '@nestjs/common';
@@ -21,6 +20,8 @@ import { ActiveUserData } from 'src/iam/interfaces/active-user-data.interface';
 import { PaginationQueryDto } from 'src/common/dto/pagination-query.dto';
 import { User } from './entities/user.entity';
 import { Pagination } from 'nestjs-typeorm-paginate';
+import { SetPasswordDto } from './dto/set-password.dto';
+import { UpdatePasswordDto } from './dto/update-password.dto';
 
 @Roles(Role.Admin)
 @ApiTags('users')
@@ -68,11 +69,27 @@ export class MeController {
     return this.usersService.getMe(user.sub);
   }
 
-  @Post()
+  @Patch()
   updateMe(
     @ActiveUser() user: ActiveUserData,
     @Body() updateUserDto: UpdateUserDto,
   ) {
     return this.usersService.update(user.sub, updateUserDto);
+  }
+
+  @Patch('set-password')
+  setPassword(
+    @ActiveUser() user: ActiveUserData,
+    @Body() setPasswordDto: SetPasswordDto,
+  ) {
+    return this.usersService.setPassword(user.sub, setPasswordDto);
+  }
+
+  @Patch('update-password')
+  updatePassword(
+    @ActiveUser() user: ActiveUserData,
+    @Body() updatePasswordDto: UpdatePasswordDto,
+  ) {
+    return this.usersService.updatePassword(user.sub, updatePasswordDto);
   }
 }

@@ -1,4 +1,10 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  DeleteDateColumn,
+  Entity,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { User } from '../../users/entities/user.entity';
 
 @Entity()
@@ -26,4 +32,10 @@ export class Experience {
 
   @ManyToOne(() => User, (user) => user.experiences)
   user: User;
+
+  @Column({ nullable: true })
+  icon: string;
+
+  @DeleteDateColumn()
+  deletedAt: Date;
 }

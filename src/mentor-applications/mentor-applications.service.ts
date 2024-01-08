@@ -52,7 +52,6 @@ export class MentorApplicationsService {
     mentorApplication.cv = createMentorApplicationDto.cv || null;
     mentorApplication.user = user;
 
-    await this.userRepository.save(user);
     await this.mentorApplicationRepository.save(mentorApplication);
 
     return mentorApplication;

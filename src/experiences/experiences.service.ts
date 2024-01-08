@@ -41,6 +41,6 @@ export class ExperiencesService {
   }
 
   remove(id: number) {
-    return this.experiencesRepository.delete(id);
+    return this.experiencesRepository.softRemove({ id });
   }
 }

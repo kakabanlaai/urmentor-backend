@@ -1,4 +1,10 @@
-import { IsBoolean, IsDate, IsOptional, IsString } from 'class-validator';
+import {
+  IsBoolean,
+  IsDate,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 
 export class CreateExperienceDto {
   @IsString()
@@ -21,4 +27,9 @@ export class CreateExperienceDto {
   @IsBoolean()
   @IsOptional()
   isCurrent: boolean;
+
+  @IsOptional()
+  @IsString()
+  @IsNotEmpty()
+  icon?: string;
 }

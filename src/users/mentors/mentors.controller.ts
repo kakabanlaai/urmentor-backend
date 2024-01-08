@@ -2,6 +2,7 @@ import {
   ClassSerializerInterceptor,
   Controller,
   Get,
+  Param,
   UseInterceptors,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
@@ -19,5 +20,10 @@ export class MentorsController {
   @Get()
   getMentors() {
     return this.mentorsService.getMentors();
+  }
+
+  @Get(':id')
+  getMentor(@Param('id') id: number) {
+    return this.mentorsService.getMentorById(+id);
   }
 }
