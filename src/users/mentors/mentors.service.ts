@@ -37,7 +37,9 @@ export class MentorsService {
         experiences: true,
         educations: true,
         skills: true,
-        programs: true,
+        programs: {
+          topic: true,
+        },
         ratings: {
           fromUser: true,
         },

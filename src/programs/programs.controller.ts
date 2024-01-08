@@ -20,6 +20,7 @@ import { ActiveUserData } from 'src/iam/interfaces/active-user-data.interface';
 export class ProgramsController {
   constructor(private readonly programsService: ProgramsService) {}
 
+  @Roles(Role.Mentor)
   @Post()
   create(
     @Body() createProgramDto: CreateProgramDto,
@@ -38,6 +39,7 @@ export class ProgramsController {
     return this.programsService.findOne(+id);
   }
 
+  @Roles(Role.Mentor)
   @Patch(':id')
   update(
     @Param('id') id: string,
@@ -47,6 +49,7 @@ export class ProgramsController {
     return this.programsService.update(+id, updateProgramDto, user.sub);
   }
 
+  @Roles(Role.Mentor)
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.programsService.remove(+id);

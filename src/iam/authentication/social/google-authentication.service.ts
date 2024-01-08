@@ -35,7 +35,28 @@ export class GoogleAuthenticationService implements OnModuleInit {
       const { sub: googleId, email } =
         await this.oauthClient.getTokenInfo(token);
 
-      const user = await this.userRepository.findOneBy({ email });
+      const user = await this.userRepository.findOne({
+        where: { email },
+        relations: {
+          experiences: true,
+          achievements: true,
+          educations: true,
+          mentorApplication: true,
+          skills: true,
+          ratings: {
+            fromUser: true,
+          },
+          programs: {
+            topic: true,
+          },
+          sessions: true,
+          sessionRegisters: {
+            program: true,
+            session: true,
+            mentee: true,
+          },
+        },
+      });
       if (user) {
         user.googleId = googleId;
         await this.userRepository.save(user);

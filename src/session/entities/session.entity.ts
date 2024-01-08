@@ -1,38 +1,33 @@
 import { SessionRegister } from 'src/session-register/entities/session-register.entity';
-import { Topic } from 'src/topics/entities/topic.entity';
 import { User } from 'src/users/entities/user.entity';
 import {
   Column,
   DeleteDateColumn,
   Entity,
+  JoinColumn,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
 @Entity()
-export class Program {
+export class Session {
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column()
-  title: string;
+  start: Date;
 
   @Column()
-  description: string;
+  end: Date;
 
-  @Column({ default: 0 })
-  price: number;
-
-  @ManyToOne(() => Topic, (topic) => topic.programs)
-  topic: Topic;
-
-  @ManyToOne(() => User, (user) => user.programs)
+  @JoinColumn()
+  @ManyToOne(() => User, (user) => user.sessions)
   user: User;
 
   @OneToMany(
     () => SessionRegister,
-    (sessionRegister) => sessionRegister.program,
+    (sessionRegister) => sessionRegister.session,
   )
   sessionRegisters: SessionRegister[];
 

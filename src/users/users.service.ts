@@ -71,6 +71,15 @@ export class UsersService {
         ratings: {
           fromUser: true,
         },
+        programs: {
+          topic: true,
+        },
+        sessions: true,
+        sessionRegisters: {
+          program: true,
+          session: true,
+          mentee: true,
+        },
       },
     });
     if (!user) {

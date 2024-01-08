@@ -55,8 +55,29 @@ export class AuthenticationService {
   }
 
   async signIn(signInDto: SignInDto) {
-    const user = await this.userRepository.findOneBy({
-      email: signInDto.email,
+    const user = await this.userRepository.findOne({
+      where: {
+        email: signInDto.email,
+      },
+      relations: {
+        experiences: true,
+        achievements: true,
+        educations: true,
+        mentorApplication: true,
+        skills: true,
+        ratings: {
+          fromUser: true,
+        },
+        programs: {
+          topic: true,
+        },
+        sessions: true,
+        sessionRegisters: {
+          program: true,
+          session: true,
+          mentee: true,
+        },
+      },
     });
 
     if (!user) {

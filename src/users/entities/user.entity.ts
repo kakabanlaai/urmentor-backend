@@ -18,6 +18,8 @@ import { MentorApplication } from 'src/mentor-applications/entities/mentor-appli
 import { Skill } from 'src/skills/entities/skill.entity';
 import { Program } from 'src/programs/entities/program.entity';
 import { Rating } from 'src/ratings/entities/rating.entity';
+import { Session } from 'src/session/entities/session.entity';
+import { SessionRegister } from 'src/session-register/entities/session-register.entity';
 
 @Entity()
 export class User {
@@ -72,6 +74,9 @@ export class User {
   @OneToMany(() => Education, (education) => education.user)
   educations: Education[];
 
+  @OneToMany(() => SessionRegister, (sessionRegister) => sessionRegister.mentee)
+  sessionRegisters: SessionRegister[];
+
   @ManyToMany(() => Skill, (skills) => skills.users)
   @JoinTable()
   skills: Skill[];
@@ -84,6 +89,9 @@ export class User {
 
   @OneToMany(() => Program, (program) => program.user)
   programs: Program[];
+
+  @OneToMany(() => Session, (session) => session.user)
+  sessions: Session[];
 
   @OneToOne(
     () => MentorApplication,

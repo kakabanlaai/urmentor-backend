@@ -1,3 +1,4 @@
+import { Topic } from './../topics/entities/topic.entity';
 import {
   BadRequestException,
   ForbiddenException,
@@ -14,6 +15,8 @@ export class ProgramsService {
   constructor(
     @InjectRepository(Program)
     private readonly programsRepository: Repository<Program>,
+    @InjectRepository(Topic)
+    private readonly topicsRepository: Repository<Topic>,
   ) {}
 
   create(createProgramDto: CreateProgramDto, userId: number) {
@@ -49,6 +52,7 @@ export class ProgramsService {
       where: { id },
       relations: {
         user: true,
+        topic: true,
       },
     });
 
@@ -60,10 +64,20 @@ export class ProgramsService {
       throw new ForbiddenException('Cannot update program');
     }
 
+    if (updateProgramDto.topicId !== undefined) {
+      const topic = await this.topicsRepository.findOne({
+        where: { id: updateProgramDto.topicId },
+      });
+      if (!topic) {
+        throw new BadRequestException('Topic not found');
+      }
+      program.topic = topic;
+    }
+
     return this.programsRepository.save({ ...program, ...updateProgramDto });
   }
 
   remove(id: number) {
-    return `This action removes a #${id} program`;
+    return this.programsRepository.softRemove({ id });
   }
 }

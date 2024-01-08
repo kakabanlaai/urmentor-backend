@@ -15,6 +15,8 @@ import { SkillsModule } from './skills/skills.module';
 import { ProgramsModule } from './programs/programs.module';
 import { TopicsModule } from './topics/topics.module';
 import { RatingsModule } from './ratings/ratings.module';
+import { SessionModule } from './session/session.module';
+import { SessionRegisterModule } from './session-register/session-register.module';
 
 @Module({
   imports: [
@@ -56,6 +58,8 @@ import { RatingsModule } from './ratings/ratings.module';
     ProgramsModule,
     TopicsModule,
     RatingsModule,
+    SessionModule,
+    SessionRegisterModule,
   ],
 })
 export class AppModule {}
