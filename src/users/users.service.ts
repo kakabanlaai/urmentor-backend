@@ -74,9 +74,14 @@ export class UsersService {
         programs: {
           topic: true,
         },
-        sessions: true,
+        sessions: {
+          sessionRegisters: true,
+        },
         sessionRegisters: {
-          program: true,
+          program: {
+            user: true,
+            topic: true,
+          },
           session: true,
           mentee: true,
         },

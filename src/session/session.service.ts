@@ -5,6 +5,8 @@ import { Repository } from 'typeorm';
 import { Session } from './entities/session.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/users/entities/user.entity';
+import { SessionRegister } from 'src/session-register/entities/session-register.entity';
+import { SessionRegisterStatus } from 'src/session-register/enums/session-register-status';
 
 @Injectable()
 export class SessionService {
@@ -13,6 +15,8 @@ export class SessionService {
     private readonly sessionsRepository: Repository<Session>,
     @InjectRepository(User)
     private readonly usersRepository: Repository<User>,
+    @InjectRepository(SessionRegister)
+    private readonly sessionRegistersRepository: Repository<SessionRegister>,
   ) {}
 
   async create(createSessionDto: CreateSessionDto) {
@@ -55,7 +59,22 @@ export class SessionService {
     return `This action updates a #${id} session`;
   }
 
-  remove(id: number) {
+  async remove(id: number) {
+    const session = await this.sessionsRepository.findOne({
+      where: { id },
+      relations: { sessionRegisters: true },
+    });
+
+    if (!session) {
+      throw new BadRequestException('Session not found');
+    }
+
+    for (const sessionRegister of session.sessionRegisters) {
+      await this.sessionRegistersRepository.update(sessionRegister.id, {
+        status: SessionRegisterStatus.Rejected,
+      });
+    }
+
     return this.sessionsRepository.softRemove({ id });
   }
 }

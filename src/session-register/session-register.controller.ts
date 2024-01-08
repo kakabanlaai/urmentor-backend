@@ -32,6 +32,16 @@ export class SessionRegisterController {
     return this.sessionRegisterService.findOne(+id);
   }
 
+  @Post(':id/accept')
+  accept(@Param('id') id: string) {
+    return this.sessionRegisterService.accept(+id);
+  }
+
+  @Post(':id/done')
+  done(@Param('id') id: string) {
+    return this.sessionRegisterService.done(+id);
+  }
+
   @Patch(':id')
   update(
     @Param('id') id: string,

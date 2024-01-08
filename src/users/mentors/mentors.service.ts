@@ -43,6 +43,9 @@ export class MentorsService {
         ratings: {
           fromUser: true,
         },
+        sessions: {
+          sessionRegisters: true,
+        },
       },
     });
     if (!mentor) {

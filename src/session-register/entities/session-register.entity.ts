@@ -1,4 +1,3 @@
-import { MentorApplicationStatus } from 'src/mentor-applications/enums/status.enum';
 import { Program } from 'src/programs/entities/program.entity';
 import { Session } from 'src/session/entities/session.entity';
 import { User } from 'src/users/entities/user.entity';
@@ -10,6 +9,7 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { SessionRegisterStatus } from '../enums/session-register-status';
 
 @Entity()
 export class SessionRegister {
@@ -30,13 +30,16 @@ export class SessionRegister {
 
   @Column({
     type: 'enum',
-    enum: MentorApplicationStatus,
-    default: MentorApplicationStatus.Pending,
+    enum: SessionRegisterStatus,
+    default: SessionRegisterStatus.Pending,
   })
-  status: MentorApplicationStatus;
+  status: SessionRegisterStatus;
 
   @Column()
   detail: string;
+
+  @Column({ default: false })
+  isDone: boolean;
 
   @DeleteDateColumn()
   deleteAt: Date;

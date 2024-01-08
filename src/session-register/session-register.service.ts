@@ -7,6 +7,7 @@ import { SessionRegister } from './entities/session-register.entity';
 import { User } from 'src/users/entities/user.entity';
 import { Program } from 'src/programs/entities/program.entity';
 import { Session } from 'src/session/entities/session.entity';
+import { SessionRegisterStatus } from './enums/session-register-status';
 
 @Injectable()
 export class SessionRegisterService {
@@ -61,7 +62,16 @@ export class SessionRegisterService {
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} sessionRegister`;
+    return this.sessionRegisterRepository.findOne({
+      where: { id },
+      relations: {
+        session: true,
+        mentee: true,
+        program: {
+          user: true,
+        },
+      },
+    });
   }
 
   update(id: number, updateSessionRegisterDto: UpdateSessionRegisterDto) {
@@ -70,5 +80,40 @@ export class SessionRegisterService {
 
   remove(id: number) {
     return this.sessionRegisterRepository.softDelete(id);
+  }
+
+  async accept(id: number) {
+    const sessionRegister = await this.sessionRegisterRepository.findOne({
+      where: { id },
+      relations: {
+        session: {
+          sessionRegisters: true,
+        },
+      },
+    });
+
+    if (!sessionRegister) {
+      throw new BadRequestException('Session register not found');
+    }
+
+    for (const sesRes of sessionRegister.session.sessionRegisters) {
+      if (sesRes.id !== sessionRegister.id) {
+        await this.sessionRegisterRepository.update(sesRes.id, {
+          status: SessionRegisterStatus.Rejected,
+        });
+      }
+    }
+
+    await this.sessionRegisterRepository.update(id, {
+      status: SessionRegisterStatus.Approved,
+    });
+
+    return sessionRegister;
+  }
+
+  done(id: number) {
+    return this.sessionRegisterRepository.update(id, {
+      status: SessionRegisterStatus.Done,
+    });
   }
 }
